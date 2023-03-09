@@ -1,0 +1,120 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.SignalR.Client;
+@using Microsoft.AspNetCore.WebUtilities
+@inject NavigationManager NavigationManager
+
+<style type="text/css">
+    .board {
+      display: grid;
+      grid-template: 50px 50px 50px / 50px 50px 50px;
+      grid-gap: 10px;
+    }
+
+    .board div {
+      background-color: lightgray;      
+      font-size: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+</style>
+
+<PageTitle>Tic Tac Toe</PageTitle>
+
+@if (gameId == null)
+{
+    <button class="btn btn-primary" @onclick="async () => await CreateGame()">Create game</button>
+}
+else
+{
+    @if (player == Player.X && game == null)
+    {
+        <p>
+            Invitation Link: <a href="@NavigationManager.ToAbsoluteUri(NavigationManager.Uri)?game-id=@gameId" target="_blank">@NavigationManager.ToAbsoluteUri(NavigationManager.Uri)?game-id=@gameId</a>
+        </p>
+    }
+
+    <p>
+        Player @this.player
+    </p>
+}
+
+@if (game != null)
+{
+    <p>@Status</p>
+
+    <div class="board">
+        @for(var i = 0; i < game.Board.Length; i++)
+        {
+            var index = i; // capture i for lambda
+            <div @onclick="async () => await Play(index)">@(game.Board[index]?.ToString())</div>
+        }
+    </div>
+}
+
+@code {
+    private HubConnection? hubConnection;
+    private string? gameId;
+    private Player? player;
+    private Game? game;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl("http://localhost:7255/api")
+            .Build();
+
+        hubConnection.On<string, Player>("GameJoined", (gameId, player) =>
+        {
+            this.gameId = gameId;
+            this.player = player;
+            StateHasChanged();
+        });
+
+        hubConnection.On<Game>("Update", game =>
+        {
+            this.game = game;
+            StateHasChanged();
+        });
+
+        await hubConnection.StartAsync();
+
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        var queryStrings = QueryHelpers.ParseQuery(uri.Query);
+        if (queryStrings.TryGetValue("game-id", out var gameId) && gameId.Count == 1)
+        {
+            await hubConnection.InvokeAsync("JoinGame", gameId.Single());
+        }
+    }
+
+    public string Status => game switch
+    {
+        { IsDraw: true } => "Draw!",
+        { IsOver: true } when game.Winner == player => "You win!",
+        { IsOver: true } when game.Winner != player => "You loose!",
+        { IsOver: false } when game.CurrentPlayer == player => "Your turn",
+        _ => "Waiting for other player..."
+    };
+
+    private async Task CreateGame()
+    {
+        await this.hubConnection!.InvokeAsync("CreateGame");        
+    }
+
+    private async Task Play(int i)
+    {
+        if (game!.TryMakeMove(new Move(player!.Value, i / 3, i % 3)))
+        {
+            StateHasChanged();
+            await hubConnection!.InvokeAsync("MakeMove", game.Id, i / 3, i % 3);
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
+        }
+    }
+}
