@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.SignalR.Client;
 @using Microsoft.AspNetCore.WebUtilities
 @inject NavigationManager NavigationManager
+@inject IConfiguration Configuration
 
 <style type="text/css">
     .board {
@@ -61,9 +62,9 @@ else
     protected override async Task OnInitializedAsync()
     {
         hubConnection = new HubConnectionBuilder()
-            .WithUrl("http://localhost:7255/api")
+            .WithUrl(Configuration["ApiUrl"]!)
             .Build();
-
+        Console.WriteLine(Configuration["ApiUrl"]);
         hubConnection.On<string, Player>("GameJoined", (gameId, player) =>
         {
             this.gameId = gameId;
