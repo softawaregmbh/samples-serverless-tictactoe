@@ -64,7 +64,7 @@ else
         hubConnection = new HubConnectionBuilder()
             .WithUrl(Configuration["ApiUrl"]!)
             .Build();
-        Console.WriteLine(Configuration["ApiUrl"]);
+
         hubConnection.On<string, Player>("GameJoined", (gameId, player) =>
         {
             this.gameId = gameId;

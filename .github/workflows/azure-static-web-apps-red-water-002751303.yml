@@ -1,0 +1,71 @@
+name: Azure Static Web Apps CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - main
+env:
+  DOTNET_CORE_VERSION: 7.0.x
+  FUNCTIONS_DIRECTORY: src/TicTacToe/TicTacToe.Functions
+  FUNCTIONS_APP_NAME: serverless-tictactoe-functions
+
+jobs:
+  build_and_deploy_swa:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    runs-on: ubuntu-latest
+    name: Build and Deploy SWA
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Build And Deploy
+        id: builddeploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_RED_WATER_002751303 }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
+          action: "upload"
+          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
+          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
+          app_location: "/src/TicTacToe/TicTacToe.Blazor" # App source code path
+          api_location: "" # Api source code path - optional
+          output_location: "wwwroot" # Built app content directory - optional
+          ###### End of Repository/Build Configurations ######
+
+  build_and_deploy_functions:
+    name: Build and Deploy functions
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+    - name: Restore
+      run: dotnet restore "${{ env.FUNCTIONS_DIRECTORY }}"
+    - name: Build
+      run: dotnet build "${{ env.FUNCTIONS_DIRECTORY }}" --configuration Release --no-restore
+    - name: Publish
+      run: dotnet publish "${{ env.FUNCTIONS_DIRECTORY }}" --configuration Release --no-build --output "${{ env.FUNCTIONS_DIRECTORY }}/Publish"
+    - name: 'Deploy to Azure Function App'
+      uses: Azure/functions-action@v1
+      with:
+        app-name: ${{ env.FUNCTIONS_APP_NAME }}
+        package: ${{ env.FUNCTIONS_DIRECTORY }}/Publish
+        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+
+  close_pull_request_job:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    name: Close Pull Request Job
+    steps:
+      - name: Close Pull Request
+        id: closepullrequest
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_RED_WATER_002751303 }}
+          action: "close"
