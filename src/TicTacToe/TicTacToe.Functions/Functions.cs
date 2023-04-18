@@ -13,24 +13,24 @@ namespace TicTacToe.Functions
 
         public record Result()
         {
-            [SignalROutput(HubName = "TicTacToe")]
+            [SignalROutput(HubName = "%HubName%")]
             public SignalRMessageAction[]? Messages { get; set; }
 
-            [SignalROutput(HubName = "TicTacToe")]
+            [SignalROutput(HubName = "%HubName%")]
             public SignalRGroupAction[]? GroupActions { get; set; }
         }
 
         [Function(nameof(Http_Negotiate))]
         public string Http_Negotiate(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "negotiate")] HttpRequestData request,
-            [SignalRConnectionInfoInput(HubName = "TicTacToe")] string connectionInfo)
+            [SignalRConnectionInfoInput(HubName = "%HubName%")] string connectionInfo)
         {
             return connectionInfo;
         }
 
         [Function(nameof(SignalR_CreateGame))]
         public static async Task SignalR_CreateGame(
-            [SignalRTrigger("TicTacToe", "messages", "CreateGame")] SignalRInvocationContext invocationContext,
+            [SignalRTrigger("%HubName%", "messages", "CreateGame")] SignalRInvocationContext invocationContext,
             [DurableClient] DurableTaskClient durableTaskClient)
         {
             var gameId = await durableTaskClient.ScheduleNewOrchestrationInstanceAsync(nameof(Orchestrator));
@@ -40,7 +40,7 @@ namespace TicTacToe.Functions
 
         [Function(nameof(SignalR_JoinGame))]
         public static async Task SignalR_JoinGame(
-            [SignalRTrigger("TicTacToe", "messages", "JoinGame", nameof(gameId))] SignalRInvocationContext invocationContext,
+            [SignalRTrigger("%HubName%", "messages", "JoinGame", nameof(gameId))] SignalRInvocationContext invocationContext,
             string gameId,
             [DurableClient] DurableTaskClient durableTaskClient)
         {
@@ -49,7 +49,7 @@ namespace TicTacToe.Functions
 
         [Function(nameof(SignalR_MakeMove))]
         public static async Task SignalR_MakeMove(
-            [SignalRTrigger("TicTacToe", "messages", "MakeMove", nameof(id), nameof(row), nameof(column))] SignalRInvocationContext invocationContext,
+            [SignalRTrigger("%HubName%", "messages", "MakeMove", nameof(id), nameof(row), nameof(column))] SignalRInvocationContext invocationContext,
             string id,
             int row,
             int column,
@@ -114,7 +114,7 @@ namespace TicTacToe.Functions
         }
 
         [Function(nameof(Activity_SendUpdate))]
-        [SignalROutput(HubName = "TicTacToe")]
+        [SignalROutput(HubName = "%HubName%")]
         public static SignalRMessageAction Activity_SendUpdate([ActivityTrigger]Game game)
         {
             return new SignalRMessageAction("Update", new object[] { game })

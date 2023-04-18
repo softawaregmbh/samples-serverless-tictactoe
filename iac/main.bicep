@@ -89,6 +89,10 @@ resource functionApp 'Microsoft.Web/sites@2020-12-01' = {
           value: 'https://${signalRName}.service.signalr.net'
         }
         {
+          name: 'HubName'
+          value: 'TicTacToe'
+        }
+        {
           name: 'FUNCTIONS_EXTENSION_VERSION'
           value: '~4'
         }
