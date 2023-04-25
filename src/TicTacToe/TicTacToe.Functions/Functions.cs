@@ -33,9 +33,7 @@ namespace TicTacToe.Functions
             [SignalRTrigger("%HubName%", "messages", "CreateGame")] SignalRInvocationContext invocationContext,
             [DurableClient] DurableTaskClient durableTaskClient)
         {
-            var gameId = await durableTaskClient.ScheduleNewOrchestrationInstanceAsync(nameof(Orchestrator));
-
-            await durableTaskClient.RaiseEventAsync(gameId, "PlayerJoined", invocationContext.ConnectionId);
+            await durableTaskClient.ScheduleNewOrchestrationInstanceAsync(nameof(Orchestrator), invocationContext.ConnectionId);
         }
 
         [Function(nameof(SignalR_JoinGame))]
@@ -61,11 +59,9 @@ namespace TicTacToe.Functions
         [Function(nameof(Orchestrator))]
         public static async Task Orchestrator([OrchestrationTrigger] TaskOrchestrationContext context)
         {
-            var logger = context.CreateReplaySafeLogger<Functions>();
-
             var game = new Game { Id = context.InstanceId };
 
-            var playerXConnection = await context.WaitForExternalEvent<string>("PlayerJoined");
+            var playerXConnection = context.GetInput<string>()!;
             
             await context.CallActivityAsync(nameof(Activity_JoinGame), new JoinInfo(playerXConnection, game.Id, Player.X));
 

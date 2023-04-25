@@ -30,8 +30,9 @@ else
 {
     @if (player == Player.X && game == null)
     {
+        var joinUri = $"{NavigationManager.ToAbsoluteUri(NavigationManager.Uri)}?game-id={gameId}";
         <p>
-            Invitation Link: <a href="@NavigationManager.ToAbsoluteUri(NavigationManager.Uri)?game-id=@gameId" target="_blank">@NavigationManager.ToAbsoluteUri(NavigationManager.Uri)?game-id=@gameId</a>
+            Invitation Link: <a href="@joinUri" target="_blank">@joinUri</a>
         </p>
     }
 
@@ -99,7 +100,7 @@ else
 
     private async Task CreateGame()
     {
-        await this.hubConnection!.InvokeAsync("CreateGame");        
+        await hubConnection!.InvokeAsync("CreateGame");        
     }
 
     private async Task Play(int i)
