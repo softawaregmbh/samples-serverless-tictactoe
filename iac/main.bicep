@@ -89,6 +89,10 @@ resource functionApp 'Microsoft.Web/sites@2020-12-01' = {
           value: 'https://${signalRName}.service.signalr.net'
         }
         {
+          name: 'HubName'
+          value: 'TicTacToe'
+        }
+        {
           name: 'FUNCTIONS_EXTENSION_VERSION'
           value: '~4'
         }
@@ -99,6 +103,14 @@ resource functionApp 'Microsoft.Web/sites@2020-12-01' = {
         {
           name: 'FUNCTIONS_WORKER_RUNTIME'
           value: 'dotnet-isolated'
+        }
+        {
+          name: 'WEBSITE_RUN_FROM_PACKAGE'
+          value: '1'
+        }
+        {
+          name: 'WEBSITE_ENABLE_SYNC_UPDATE_SITE'
+          value: 'true'
         }
       ]
     }

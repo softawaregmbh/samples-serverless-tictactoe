@@ -5,9 +5,9 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicTacToe.Functions", "TicTacToe.Functions\TicTacToe.Functions.csproj", "{DFA80867-D01A-44CF-84B0-809A06A9EA13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe.Blazor", "TicTacToe.Blazor\TicTacToe.Blazor.csproj", "{0C3F0229-BD68-47A5-9F44-6E014BC6296B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicTacToe.Blazor", "TicTacToe.Blazor\TicTacToe.Blazor.csproj", "{0C3F0229-BD68-47A5-9F44-6E014BC6296B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe", "TicTacToe\TicTacToe.csproj", "{91C204C2-879A-42C8-AEE5-316BFAB278AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicTacToe.Shared", "TicTacToe.Shared\TicTacToe.Shared.csproj", "{91C204C2-879A-42C8-AEE5-316BFAB278AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
