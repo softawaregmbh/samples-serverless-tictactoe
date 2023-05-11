@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
@@ -14,7 +14,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\TicTacToe\TicTacToe.csproj" />
+	  <ProjectReference Include="..\TicTacToe.Shared\TicTacToe.Shared.csproj" />
 	</ItemGroup>
 
 </Project>

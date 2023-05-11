@@ -22,12 +22,15 @@
 
 <PageTitle>Tic Tac Toe</PageTitle>
 
+
 @if (gameId == null)
 {
+    // Show Create Game button when we're not connected to a game yet
     <button class="btn btn-primary" @onclick="async () => await CreateGame()">Create game</button>
 }
 else
 {
+    // Show invitation link when we are connected, but there is not second player yet
     @if (player == Player.X && game == null)
     {
         var joinUri = $"{NavigationManager.ToAbsoluteUri(NavigationManager.Uri)}?game-id={gameId}";
@@ -43,6 +46,8 @@ else
 
 @if (game != null)
 {
+    // If the game has started, show the status and draw the board
+
     <p>@Status</p>
 
     <div class="board">
@@ -62,6 +67,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        // Create SignalR connection and register callbacks
+
         hubConnection = new HubConnectionBuilder()
             .WithUrl(Configuration["ApiUrl"]!)
             .Build();
@@ -80,6 +87,9 @@ else
         });
 
         await hubConnection.StartAsync();
+
+
+        // If we have a game-id query string, join the game
 
         var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
         var queryStrings = QueryHelpers.ParseQuery(uri.Query);
