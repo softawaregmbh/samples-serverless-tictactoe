@@ -35,15 +35,19 @@ If you want to deploy the sample to your own Azure subscription:
     az deployment group create --resource-group my-sample --template-file iac/main.bicep --name samples-serverless-tictactoe
     ```
 
-* You need to provide a GitHub access token as parameter (the command above will ask for it). You can create one [here](https://github.com/settings/tokens?type=beta) (it requires `Read access to metadata` and `Read and Write access to actions, actions variables, code, secrets, and workflows` permissions for your repository).
+* You need to provide your repository URL and a GitHub access token as parameters (the command above will ask for them). You can create an access token [here](https://github.com/settings/tokens?type=beta) (it requires `Read access to metadata` and `Read and Write access to actions, actions variables, code, secrets, and workflows` permissions for your repository).
 
-* Running the command will (among others) create a Static Web App and a Function App in your resource group.
+* Running the command will (among others) create a Function App and a Static Web App in your resource group and create a GitHub action for the Static Web App in your repository.
 
-* Then you can copy the code from the [existing GitHub action](.github/workflows/azure-static-web-apps-red-water-002751303.yml) to this new action (but replace `AZURE_STATIC_WEB_APPS_API_TOKEN_AMBITIOUS_RIVER_0FBF49203` with the secret name from your file).
+* Replace the URL in [appsettings.json](src/TicTacToe/TicTacToe.Blazor/wwwroot/appsettings.json) with the URL of your Function App (keep the `/api` postfix).
 
-* You can now delete the [existing GitHub action](.github/workflows/azure-static-web-apps-red-water-002751303.yml) file.
+* Download the publish profile for the Function App that was created.
 
-* Finally, download the publish profile for the Function App that was created and create a new repository secret named `AZURE_FUNCTIONAPP_PUBLISH_PROFILE` and paste the XML code from the publish profile as the value.
+* Create a new repository secret named `AZURE_FUNCTIONAPP_PUBLISH_PROFILE` and paste the XML code from the publish profile as the value.
+
+* Then you can copy the code from the [existing GitHub action](.github/workflows/azure-static-web-apps-red-water-002751303.yml) to the new action (but replace `AZURE_STATIC_WEB_APPS_API_TOKEN_AMBITIOUS_RIVER_0FBF49203` with the secret name from your file).
+
+* You can now delete the [existing GitHub action](.github/workflows/azure-static-web-apps-red-water-002751303.yml).
 
 * Running the GitHub action should now build and deploy the code and you should be able to run the game by accessing your Static Web App.
 

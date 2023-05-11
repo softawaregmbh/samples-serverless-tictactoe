@@ -12,6 +12,9 @@ param functionAppName string = '${resourceGroup().name}-functions'
 @description('The name of the static web app')
 param swaName string = '${resourceGroup().name}-swa'
 
+@description('The URL to your repository')
+param repositoryUrl string
+
 @description('The GitHub token for the repository with the following permissions: "Read access to metadata" and "Read and Write access to actions, actions variables, code, secrets, and workflows" (used for creating the static web app). See https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/.')
 @secure()
 param gitHubToken string
@@ -26,7 +29,7 @@ resource staticWebApp 'Microsoft.Web/staticSites@2021-01-15' = {
     properties: {
       branch: 'main'
       repositoryToken: gitHubToken
-      repositoryUrl: 'https://github.com/softawaregmbh/samples-serverless-tictactoe'
+      repositoryUrl: repositoryUrl
       buildProperties: {
         appLocation: '/src/TicTacToe/TicTacToe.Blazor'
         outputLocation: 'wwwroot'
