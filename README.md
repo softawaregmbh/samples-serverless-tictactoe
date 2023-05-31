@@ -6,10 +6,17 @@ This is a sample of a serverless multiplayer game running in Azure using the fol
 * [Azure SignalR Service](https://azure.microsoft.com/en-us/products/signalr-service)
 * [(Durable) Azure Functions](https://learn.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-overview?tabs=csharp-inproc)
 
+This recording of the Global Azure 2023 session walks you through the code:
+
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=VQaH35Xxffg" target="_blank">
+ <img src="http://img.youtube.com/vi/VQaH35Xxffg/maxresdefault.jpg" alt="Watch the video" width="540" />
+</a>
+
+## Communication flow
+
 ![Communication flow](https://www.websequencediagrams.com/cgi-bin/cdraw?lz=Q2xpZW50LT5GdW5jdGlvbnM6IFtTaWduYWxSXSBDcmVhdGVHYW1lCgAXCS0-T3JjaGVzdHJhdG9yOiBTY2hlZHVsZU5ld0luc3RhbmNlKGNvbm5lAEoFSWQpCm5vdGUgcmlnaHQgb2YgADAOAFwGIGdhbWUKAEwMAIEDDkFjdGl2aXR5XTogSm9pbkdhbQBWDiwAPAVJZCkAgRsMAIFUBjogR2FtZUpvaW5lZCgAIAYsICJYIgB5HldhaXRGb3JFdmVudCgiUGxheWVyAD4GIikKAIIWHQCBFwkAgH8TAIIrDlJhaXNlAE4ULCAAgjIOAIEta08AgXkfU3RhcnQAgwMrVXBkYXQAgXcVAIMWCAAXCykKCmxvb3Agd2hpbGUgIWdhbWUuSXNPdmVyAIMBK01vdmUAgwQgTWFrZU1vdgCCdS8AVQUAgwwQAIVAHACBdwYAgVRaZW5kCg&s=default)
 
-
-## Local development: 
+## Local development 
 
 You can use the following emulators for local development:
 * [Azurite](https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azurite?tabs=visual-studio) (should start automatically when you launch the `TicTacToe.Functions` project)
